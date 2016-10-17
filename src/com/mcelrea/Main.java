@@ -78,7 +78,20 @@ public class Main extends Application {
                 if(x >= 650 && x <= 700 && y >= 150 && y <= 200) {
                     currentTile = WumpusTile.SPIDER;
                 }
+                //clicked on spider toolbar tile
+                if(x >= 650 && x <= 700 && y >= 250 && y <= 300) {
+                    currentTile = WumpusTile.GOLD;
+                }
+
+                if(currentTile != -1) {
+                Location loc = convertMouseCoordsIntoLoc(x,y);
+                if(isValid(loc)) {
+                    world[loc.getRow()][loc.getCol()] = new WumpusTile(currentTile);
+                    //placeHints(loc,currentTile);
+                    currentTile = -1;
+                }
             }
+        }
         });
 
         new AnimationTimer(){
@@ -97,8 +110,24 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private boolean isValid(Location loc) {
+
+        if(loc.getRow() >=0 && loc.getRow() < world.length &&
+                loc.getCol() >= 0 && loc.getCol() < world[loc.getRow()].length) {
+            return true;
+        }
+
+        return false;
+    }
+
     public Location convertMouseCoordsIntoLoc(int x, int y) {
-        return null;
+
+        int col = (x-5)/50;
+        int row = (y-10)/50;
+
+        Location loc = new Location(row,col);
+        System.out.println(loc);
+        return loc;
     }
 
     private void drawToolbar(GraphicsContext gc) {
@@ -113,6 +142,9 @@ public class Main extends Application {
         if(currentTile != -1) {
             if(currentTile == WumpusTile.SPIDER) {
                 gc.drawImage(spiderImage,mouse_x-25, mouse_y-25);
+            }
+            else if(currentTile == WumpusTile.GOLD) {
+                gc.drawImage(goldImage,mouse_x-25, mouse_y-25);
             }
         }
     }
